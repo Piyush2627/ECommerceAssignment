@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 interface HomepageProductsProps {
   categories: string;
@@ -12,15 +12,21 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { FaShoppingCart, FaRegHeart, FaSpinner } from "react-icons/fa";
+import { FaShoppingCart, FaRegHeart } from "react-icons/fa";
 import { fetchProductCategories } from "@/api/fetchProductCategories";
 import { useParams } from "react-router-dom";
+import { Input } from "./ui/input";
+import { Product } from "@/@types/Types";
 
 function HomepageProducts() {
+  const [isSearchText, setIsSearchText] = useState("");
+
   const [expandedCards, setExpandedCards] = useState<{ [id: number]: boolean }>(
     {},
   );
+
   const { categoryName } = useParams();
+  const handleFilterData = () => {};
 
   const categoryMap: Record<string, number> = {
     cloths: 1,
@@ -39,7 +45,13 @@ function HomepageProducts() {
     queryKey: ["products", categoryName || "all"], // Key changes automatically!
     queryFn: () => fetchProductCategories(fetchUrl),
   });
-
+  const [isFilterData, setIsFilterData] = useState<Product[] | undefined>(data);
+  const filteredProducts = useMemo(() => {
+    if (!data) return [];
+    return data.filter((product) =>
+      product.title.toLowerCase().includes(isSearchText.toLowerCase()),
+    );
+  }, [data, isSearchText]);
   const toggleDescription = (id: number) => {
     setExpandedCards((prev) => ({ ...prev, [id]: !prev[id] }));
   };
@@ -47,12 +59,22 @@ function HomepageProducts() {
   return (
     <section className="bg-gray-50/50">
       <div className="container mx-auto px-4">
-        <h2 className="mb-8 text-3xl font-bold tracking-tight text-gray-900">
-          Featured Collection
-        </h2>
+        <div className="flex justify-between">
+          <h2 className="mb-8 text-3xl font-bold tracking-tight text-gray-900">
+            Featured Collection
+          </h2>
+          <div>
+            <Input
+              value={isSearchText}
+              onChange={(e) => setIsSearchText(e.target.value)}
+              className="border-gray-200"
+              placeholder="Search"
+            />
+          </div>
+        </div>
 
         <div className="grid grid-cols-1 gap-8 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
-          {data?.map((product) => {
+          {filteredProducts?.map((product) => {
             const isExpanded = expandedCards[product.id];
 
             return (

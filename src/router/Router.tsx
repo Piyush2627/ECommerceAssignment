@@ -13,7 +13,7 @@ export const router = createBrowserRouter([
         element: <HomePage />,
       },
       {
-        path: "category/:categoryName", // The ":categoryName" is a dynamic variable
+        path: "category/:categoryName",
         element: <HomepageProducts />,
       },
     ],

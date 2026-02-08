@@ -34,7 +34,7 @@ function HomePage() {
           </a>
         </div>
         <div>
-          <img src="/src/assets/HeadphoneHomePage.png" alt="Headphone" />
+          <img src="/HeadphoneHomePage.png" alt="Headphone" />{" "}
         </div>
       </div>
       <div className="flex items-center">
