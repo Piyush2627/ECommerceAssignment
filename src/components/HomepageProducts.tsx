@@ -1,5 +1,7 @@
 import { useMemo, useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { FaCartShopping } from "react-icons/fa6";
+
 interface HomepageProductsProps {
   categories: string;
 }
@@ -12,14 +14,29 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 
-import { FaShoppingCart, FaRegHeart } from "react-icons/fa";
+import { FaMinus, FaPlus, FaRegHeart } from "react-icons/fa";
 import { fetchProductCategories } from "@/api/fetchProductCategories";
 import { useParams } from "react-router-dom";
 import { Input } from "./ui/input";
 import { Product } from "@/@types/Types";
 
+import {
+  SheetTrigger,
+  SheetContent,
+  SheetHeader,
+  SheetTitle,
+  SheetDescription,
+  SheetFooter,
+  Sheet,
+} from "./ui/sheet";
+import { ArrowLeftIcon } from "lucide-react";
+import { ButtonGroup } from "./ui/button-group";
+import { RadioGroup, RadioGroupItem } from "./ui/radio-group";
+import { Label } from "./ui/label";
+
 function HomepageProducts() {
   const [isSearchText, setIsSearchText] = useState("");
+  const [isAmountCounter, setIsAmountCounter] = useState(1);
 
   const [expandedCards, setExpandedCards] = useState<{ [id: number]: boolean }>(
     {},
@@ -137,10 +154,107 @@ function HomepageProducts() {
                 </CardContent>
 
                 <CardFooter className="mt-auto pt-0">
-                  <Button className="w-full gap-2 bg-black text-white shadow-lg shadow-gray-900/20 transition-colors hover:bg-gray-800">
-                    <FaShoppingCart size={16} />
-                    Add to Cart
-                  </Button>
+                  <Sheet>
+                    <SheetTrigger className="w-full gap-2 rounded-md bg-black py-2 text-white shadow-lg shadow-gray-900/20 transition-colors hover:bg-gray-800">
+                      Shop now
+                    </SheetTrigger>
+                    <SheetContent className="border-0 bg-white">
+                      <SheetHeader>
+                        <SheetTitle>{product.title}</SheetTitle>
+
+                        <SheetDescription>
+                          {product.category.slug}
+                        </SheetDescription>
+                      </SheetHeader>
+                      <div className="flex items-center">
+                        <hr className="grow border-t border-gray-300" />
+                        <hr className="grow border-t border-gray-300" />
+                      </div>
+                      <div className="p-4">
+                        <img
+                          src={product.images[0]}
+                          className="rounded"
+                          alt=""
+                        />
+                      </div>
+                      <div className="px-4">
+                        <div className="text-xl font-semibold">
+                          Payment Method
+                        </div>
+                        <div className="mt-4">
+                          <RadioGroup
+                            defaultValue="comfortable"
+                            className="w-fit"
+                          >
+                            <div className="flex items-center gap-3">
+                              <RadioGroupItem value="default" id="r1" />
+                              <Label htmlFor="r1">GPay</Label>
+                            </div>
+                            <div className="flex items-center gap-3">
+                              <RadioGroupItem value="comfortable" id="r2" />
+                              <Label htmlFor="r2">Card</Label>
+                            </div>
+                          </RadioGroup>
+                        </div>
+                      </div>
+                      <div className="flex items-center space-x-4 px-4 align-middle">
+                        <div>Quantity </div>
+                        <ButtonGroup className="sm:flex">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            aria-label="Go Back"
+                            className="border-gray-100"
+                            onClick={() =>
+                              setIsAmountCounter((prev) => prev + 1)
+                            }
+                          >
+                            <FaPlus />
+                          </Button>
+                        </ButtonGroup>
+                        <ButtonGroup>
+                          <Button variant="outline" className="border-gray-100">
+                            {isAmountCounter}
+                          </Button>
+                          <Button
+                            variant="outline"
+                            className="bg-black text-white"
+                          >
+                            {isAmountCounter * product.price}
+                          </Button>
+                        </ButtonGroup>
+
+                        <ButtonGroup className="sm:flex">
+                          <Button
+                            variant="outline"
+                            size="icon"
+                            aria-label="Go Back"
+                            className="border-gray-100"
+                            onClick={() =>
+                              setIsAmountCounter((prev) => prev - 1)
+                            }
+                          >
+                            <FaMinus />
+                          </Button>
+                        </ButtonGroup>
+                      </div>
+                      <SheetFooter>
+                        <Button
+                          variant="default"
+                          size="icon"
+                          aria-label="Go Back"
+                          className="w-full border-gray-100 bg-black text-white"
+                        >
+                          <div className="flex space-x-2">
+                            <div>Check Out</div>
+                            <div>
+                              <FaCartShopping />
+                            </div>
+                          </div>
+                        </Button>
+                      </SheetFooter>
+                    </SheetContent>
+                  </Sheet>
                 </CardFooter>
               </Card>
             );

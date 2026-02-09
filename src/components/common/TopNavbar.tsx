@@ -5,6 +5,8 @@ import {
   HoverCardContent,
   HoverCardTrigger,
 } from "../ui/hover-card";
+
+import { Avatar, AvatarImage, AvatarFallback } from "../ui/avatar";
 export const categories = [
   { slug: "cloths", label: "Cloths" },
   { slug: "electronics", label: "Electronics" },
@@ -54,12 +56,18 @@ export default function TopNavbar() {
         <div className="flex items-center gap-4">
           <HoverCard openDelay={10} closeDelay={100}>
             <HoverCardTrigger asChild>
-              <Button
-                variant="ghost"
-                className="h-8 w-8 rounded-full bg-gray-100"
-              />
+              <Avatar>
+                <AvatarImage
+                  src="https://github.com/shadcn.png"
+                  alt="@shadcn"
+                  className="grayscale"
+                />
+                <AvatarFallback>CN</AvatarFallback>
+              </Avatar>
             </HoverCardTrigger>
-            <HoverCardContent className="w-64"></HoverCardContent>
+            <HoverCardContent className="w-64 border-gray-100 bg-white">
+              <div>youremail.com</div>
+            </HoverCardContent>
           </HoverCard>
           <Button variant="default" size="sm">
             Login
